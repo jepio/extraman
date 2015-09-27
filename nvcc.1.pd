@@ -82,13 +82,13 @@ input file types:
 
 :   Compile each .c/.cc/.cpp/.cxx/.cu input file into an object file that
     contains relocatable device code. It is equivalent to
-    __--relocatable-device-code=true\ --compile__.
+    __--relocatable-device-code=true --compile__.
 
 -dw, --device-w
 
 :   Compile each .c/.cc/.cpp/.cxx/.cu input file into an object file that
     contains executable device code. It is equivalent to
-     __--relocatable-device-code=false\ --compile__.
+     __--relocatable-device-code=false --compile__.
 
 -dlink, --device-link
 
@@ -125,7 +125,7 @@ File and path specifications
 
 -include, --pre-include _FILE_...
 
-:   Specify header *FILE* s that must be preincluded during preprocessing.
+:   Specify header *FILE*s that must be preincluded during preprocessing.
 
 -l, --library _library_...
 
@@ -470,9 +470,8 @@ Options for steering GPU code generation
 
 -e, --entries _ENTRY_...
 
-:   Specify the global entry functions for which code must be generated.
-
-    By default, code will be generated for all entry functions.
+:   Specify the global entry functions for which code must be generated.  By
+    default, code will be generated for all entry functions.
 
 -maxrregcount, --maxrregcount _NUM_
 
@@ -571,8 +570,6 @@ Generic tool options
     :   Be more strict about unsupported cross execution space calls. The
         compiler will generate an error instead of a warning for a call from a
         `__host__ __device__` to a `__host__` function.
-
-    Allowed values for this option: cross-execution-space-call.
 
 -res-usage, --resource-usage
 
