@@ -4,7 +4,7 @@
 
 NAME
 ====
-nvcc − NVIDIA ® Cuda compiler driver
+nvcc - NVIDIA ® Cuda compiler driver
 
 
 SYNOPSIS
@@ -16,6 +16,7 @@ DESCRIPTION
 
 Options for specifying the compilation phase
 --------------------------------------------
+
 More exactly, these options specify up to which stage the input files must be
 compiled, according to the following compilation trajectories for different
 input file types:
@@ -35,244 +36,242 @@ input file types:
 .ptx               :  PTX assemble into cubin.                    
 ------------------ -  ---------------------------------------------------------
 
-__−cuda__, __−−cuda__
+-cuda, --cuda
 
 :   Compile all .cu input files to .cu.cpp.ii output.
 
-__−cubin__, __−−cubin__
+-cubin, --cubin
 
-:   Compile all .cu/.gpu/.ptx input files to device−only .cubin files.
-
-    This step discards the host code for each .cu input file.
-
-__−fatbin__, __−−fatbin__
-
-:   Compile all .cu/.gpu/.ptx/.cubin input files to device−only .fatbin files.
+:   Compile all .cu/.gpu/.ptx input files to device-only .cubin files.
 
     This step discards the host code for each .cu input file.
 
-__−ptx__, __−−ptx__
+-fatbin, --fatbin
 
-:   Compile all .cu/.gpu input files to device−only .ptx files.
+:   Compile all .cu/.gpu/.ptx/.cubin input files to device-only .fatbin files.
+
+    This step discards the host code for each .cu input file.
+
+-ptx, --ptx
+
+:   Compile all .cu/.gpu input files to device-only .ptx files.
 
     This step discards the host code for each of these input file.
 
-__−gpu__, __−−gpu__
+-gpu, --gpu
 
-:   Compile all .cu input files to device−only .gpu files.
+:   Compile all .cu input files to device-only .gpu files.
 
     This step discards the host code for each .cu input file.
 
-__−E__, __−−preprocess__
+-E, --preprocess
 
 :   Preprocess all .c/.cc/.cpp/.cxx/.cu input files.
 
-__−M__, __−−generate−dependencies__
+-M, --generate-dependencies
 
 :   Generate a dependency file that can be included in a makefile for the
     .c/.cc/.cpp/.cxx/.cu input file (more than one are not allowed in this
     mode).
 
-__−c__, __−−compile__
+-c, --compile
 
 :   Compile each .c/.cc/.cpp/.cxx/.cu input file into an object file.
 
-__−dc__, __−−device−c__
+-dc, --device-c
 
 :   Compile each .c/.cc/.cpp/.cxx/.cu input file into an object file that
     contains relocatable device code. It is equivalent to
-    __−−relocatable−device−code=true\ −−compile__.
+    __--relocatable-device-code=true\ --compile__.
 
-__−dw__, __−−device−w__
+-dw, --device-w
 
 :   Compile each .c/.cc/.cpp/.cxx/.cu input file into an object file that
     contains executable device code. It is equivalent to
-     __−−relocatable−device−code=false\ −−compile__.
+     __--relocatable-device-code=false\ --compile__.
 
-__−dlink__, __−−device−link__
+-dlink, --device-link
 
 :   Link object files with relocatable device code and .ptx/.cubin/.fatbin
     files into an object file with executable device code, which can be
     passed to the host linker.
 
-__−link__, __−−link__
+-link, --link
 
 :   This option specifies the default behavior: compile and link all inputs.
 
-__−lib__, __−−lib__
+-lib, --lib
 
 :   Compile all inputs into object files (if necessary) and add the results
-to the specified output library file.
+    to the specified output library file.
 
-__−run__, __−−run__
+-run, --run
 
 :   This option compiles and links all inputs into an executable, and
     executes it. Or, when the input is a single executable, it is executed
     without any compilation or linking. This step is intended for developers
     who do not want to be bothered with setting the necessary environment
-    variables; these are set temporarily by nvcc).
+    variables; these are set temporarily by nvcc.
 
 File and path specifications 
 ----------------------------
 
-__−−output−file__ _FILE_(__−o__)
+-o, --output-file _FILE_
 
-:   Specify name and location of the output file.
+:   Specify name and location of the output _FILE_.
 
     Only a single input file is allowed when this option is present in nvcc
-    non−linking/archiving mode.
+    non-linking/archiving mode.
 
-__−include__, __−−pre−include__ _file_,...
+-include, --pre-include _FILE_...
 
-:   Specify header files that must be preincluded during preprocessing.
+:   Specify header *FILE* s that must be preincluded during preprocessing.
 
-__−l__, __−−library__ _library_,...
+-l, --library _library_...
 
 :   Specify libraries to be used in the linking stage without the library
     file extension. The libraries are searched for on the library search
-    paths that have been specified using option '−−library−path'.
+    paths that have been specified using option __--library-path__.
 
-__−D__, __−−define−macro__ _def_,...
+-D, --define-macro _DEF_...
 
 :   Specify macro definitions to define for use during preprocessing or
     compilation.
 
-__−U__, __−−undefine−macro__ _def_,...
+-U, --undefine-macro _DEF_...
 
 :   Undefine macro definitions during preprocessing or compilation.
 
-__−I__, __−−include−path__ _path_,...
+-I, --include-path _PATH_...
 
 :   Specify include search paths.
 
-__−isystem__, __−−system−include__ _path_,...
+-isystem, --system-include _PATH_...
 
 :   Specify system include search paths.
 
-__−L__, __−−library−path__ _path_,...
+-L, --library-path _PATH_...
 
 :   Specify library search paths.
 
-__−odir__, __−−output−directory__ _directory_
+-odir, --output-directory _DIRECTORY_
 
 :   Specify the directory of the output file.
 
     This option is intended for letting the dependency generation step (see
-    __−−generate−dependencies__) generate a rule that defines the target object
+    __--generate-dependencies__) generate a rule that defines the target object
     file in the proper directory.
 
-__−ccbin__, __−−compiler−bindir__ _path_
+-ccbin, --compiler-bindir _PATH_
 
 :   Specify the directory in which the host compiler executable resides.
 
     The host compiler executable name can be also specified to ensure that the
     correct host compiler is selected. In addition, driver prefix options
-    (__−−input−drive−prefix__, __−−dependency−drive−prefix__, or
-    __−−drive−prefix__) may need to be specified, if nvcc is executed in a
+    (__--input-drive-prefix__, __--dependency-drive-prefix__, or
+    __--drive-prefix__) may need to be specified, if nvcc is executed in a
     Cygwin shell or a MinGW shell on Windows.
 
-__−cudart__, __−−cudart__ (none|shared|static)
+-cudart, --cudart (none|shared|static)
 
 :   Specify the type of CUDA runtime library to be used: no CUDA runtime
     library, shared/dynamic CUDA runtime library, or static CUDA runtime
-    library. Allowed values for this option: 'none','shared','static'.
+    library. Allowed values for this option: 'none', 'shared', 'static'.
     Default value: 'static'.
 
-__−−libdevice−directory__ _directory_ (__−ldir__)
+-ldir, --libdevice-directory _DIRECTORY_
 
-:   Specify the directory that contains the libdevice library files when
-    option __−−dont−use−profile__ is used. Libdevice library files are located
+:   Specify the _DIRECTORY_ that contains the libdevice library files when
+    option __--dont-use-profile__ is used. Libdevice library files are located
     in the 'nvvm/libdevice' directory in the CUDA toolkit.
 
-__−−cl−version__ _cl−version−number_ __−−cl−version__ _cl−version−number_
+--cl-version _CL-VERSION-NUMBER_
 
 :   Specify the version of Microsoft Visual Studio installation.
 
-    Note: this option is to be used in conjunction with __−−use−local−env__,
-    and is ignored when __−−use−local−env__ is not specified. Allowed values
+    _Note_: this option is to be used in conjunction with __--use-local-env__,
+    and is ignored when __--use-local-env__ is not specified. Allowed values
     for this option: 2010,2012,2013.
 
-__−−use−local−env__
+--use-local-env
 
 :   Specify whether the environment is already set up for the host compiler.
 
 Options for specifying behavior of compiler/linker
 --------------------------------------------------
 
-__−pg__, __−−profile__
+-pg, --profile
 
 :   Instrument generated code/executable for use by gprof (Linux only).
 
-__−g__, __−−debug__
+-g, --debug
 
 :   Generate debug information for host code.
 
-__−G__, __−−device−debug__
+-G, --device-debug
 
 :   Generate debug information for device code.
 
-__−lineinfo__, __−−generate−line−info__
+-lineinfo, --generate-line-info
 
-:   Generate line−number information for device code.
+:   Generate line-number information for device code.
 
-__−O__, __−−optimize__ _level_
+-O_level_, --optimize _level_
 
-:   Specify optimization level for host code.
+:   Specify optimization _level_ for host code.
 
-__−ftemplate−backtrace−limit__, __−−ftemplate−backtrace−limit__ _limit_
+-ftemplate-backtrace-limit, --ftemplate-backtrace-limit _limit_
 
 :   When compiling CUDA source code, set the maximum number of template
     instantiation notes for a single warning or error to _limit_. A
     value of 0 is allowed, and indicates that no limit should be enforced.
-    Note: This flag does not affect the host compiler used for compiling
+
+    _Note_: This flag does not affect the host compiler used for compiling
     host part of the CUDA source code.
 
-__−shared__, __−−shared__
+-shared, --shared
 
 :   Generate a shared library during linking.
 
-Use option '−−linker−options'
+    Use option __--linker-options__ when other linker options are required for
+    more control.
 
-when other linker options are required for more control.
-
-__−x__, __−−x__ (c|c++|cu)
+-x, --x (c|c++|cu)
 
 :   Explicitly specify the language for the input files, rather than letting
     the compiler choose a default based on the file name suffix. Allowed
     values for this option: 'c','c++','cu'.
 
-__−std__, __−−std__ (c++11)
+-std, --std (c++11)
 
 :   Select a particular C++ dialect.
 
-    The only value currently supported is "c++11". Enabling C++11 mode also
-    turns on C++11 mode for the host compiler. Allowed values for this option:
-    'c++11'.
+    The only value currently supported is 'c++11'. Enabling C++11 mode also
+    turns on C++11 mode for the host compiler.
 
-__−nohdinitlist__, __−−no−host−device−initializer−list__
+-nohdinitlist, --no-host-device-initializer-list
 
-:   Do not implicitly consider member functions of std::initializer_list as
+:   Do not implicitly consider member functions of `std::initializer_list` as
     `__host__ __device__` functions.
 
-__−nohdmoveforward__, __−−no−host−device−move−forward__
+-nohdmoveforward, --no-host-device-move-forward
 
-:   Do not implicitly consider std::move and std::forward as `__host__
+:   Do not implicitly consider `std::move` and `std::forward` as `__host__
     __device__` function templates.
 
-__−expt−relaxed−constexpr__, __−−expt−relaxed−constexpr__
+-expt-relaxed-constexpr, --expt-relaxed-constexpr
 
 :   Experimental flag: Allow host code to invoke `__device__` constexpr
     functions, and device code to invoke `__host__` constexpr functions.
 
-__−expt−extended−lambda__, __−−expt−extended−lambda__
+-expt-extended-lambda, --expt-extended-lambda
 
 :   Experimental flag: Allow `__host__`, `__device__` annotations in
     lambda declaration.
 
-__−m__, __−−machine__ [32|64]
+-m, --machine (32|64)
 
-:   Specify 32 vs 64 bit architecture. Allowed values for this option:
-    32,64. Default value: 64.
+:   Specify 32 vs 64 bit architecture. Default value: 64.
 
 Options for passing specific phase options
 ------------------------------------------
@@ -281,73 +280,72 @@ Using these, users have the ability to pass options to the lower level
 compilation tools, without the need for nvcc to know about each and every such
 option.
 
-__−Xcompiler__, __−−compiler−options__ _options_,...
+-Xcompiler, --compiler-options _OPTION_...
 
 :   Specify options directly to the compiler/preprocessor.
 
-__−Xlinker__, __−−linker−options__ _options_,...
+-Xlinker, --linker-options _OPTION_...
 
 :   Specify options directly to the host linker.
 
-__−Xarchive__, __−−archive−options__ _options_,...
+-Xarchive, --archive-options _OPTION_...
 
 :   Specify options directly to library manager.
 
-__−Xptxas__, __−−ptxas−options__ _options_,...
+-Xptxas, --ptxas-options _OPTION_...
 
 :   Specify options directly to ptxas, the PTX optimizing assembler.
 
-__−Xnvlink__, __−−nvlink−options__ _options_,...
+-Xnvlink, --nvlink-options _OPTION_...
 
 :   Specify options directly to nvlink.
 
 Miscellaneous options for guiding the compiler driver
 -----------------------------------------------------
 
-__−noprof__, __−−dont−use−profile__
+-noprof, --dont-use-profile
 
-:   Nvcc uses the nvcc.profiles file for compilation.
+:   nvcc uses the nvcc.profiles file for compilation. When this option is
+    specified, the profile file is not used.
 
-    When specifying this option, the profile file is not used.
+-dryrun, --dryrun
 
-__−dryrun__, __−−dryrun__
+:   Do not execute the compilation commands generated by nvcc. Instead,
+    list them.
 
-:   Do not execute the compilation commands generated by nvcc. Instead, list 
-    them.
-
-__−v__, __−−verbose__
+-v, --verbose
 
 :   List the compilation commands generated by this compiler driver, but do
     not suppress their execution.
 
-__−keep__, __−−keep__
+-keep, --keep
 
 :   Keep all intermediate files that are generated during internal
     compilation steps.
 
-__−keep−dir__, __−−keep−dir__ _directory_
+-keep-dir, --keep-dir _DIRECTORY_
 
 :   Keep all intermediate files that are generated during internal compilation
     steps in this directory.
 
-__−save−temps__, __−−save−temps__
+-save-temps, --save-temps
 
-:   This option is an alias of __−−keep__.
+:   This option is an alias of __--keep__.
 
-__−clean__, __−−clean−targets__
+-clean, --clean-targets
 
-:   This option reverses the behavior of nvcc.
+:   This option reverses the behavior of __nvcc__.
 
     When specified, none of the compilation phases will be executed.  Instead,
-    all of the non−temporary files that nvcc would otherwise create will be
+    all of the non-temporary files that nvcc would otherwise create will be
     deleted.
 
-__−run−args__, __−−run−args__ _arguments_,...
+-run-args, --run-args _ARG_...
 
-:   Used in combination with option __−−run__ to specify command line arguments
+:   Used in combination with option __--run__ to specify command line arguments
     for the executable.
 
-__−idp__, __−−input−drive−prefix__ _prefix_
+-idp, --input-drive-prefix _PREFIX_
 
 :   On Windows, all command line arguments that refer to file names must be
     converted to the Windows native format before they are passed to pure
@@ -355,10 +353,10 @@ __−idp__, __−−input−drive−prefix__ _prefix_
     environment represents absolute paths. Use '/cygwin/' as _prefix_ for
     Cygwin build environments, and '/' as _prefix_ for MinGW.
 
-__−ddp__, __−−dependency−drive−prefix__ _prefix_
+-ddp, --dependency-drive-prefix _PREFIX_
 
 :   On Windows, when generating dependency files (see
-    __−−generate−dependencies__) all file names must be converted appropriately
+    __--generate-dependencies__) all file names must be converted appropriately
     for the instance of 'make' that is used. Some instances of 'make' have
     trouble with the colon in absolute paths in the native Windows format,
     which depends on the environment in which the 'make' instance has been
@@ -366,30 +364,32 @@ __−ddp__, __−−dependency−drive−prefix__ _prefix_
     _prefix_ for MinGW. Or leave these file names in the native Windows
     format by specifying nothing.
 
-__−dp__, __−−drive−prefix__ _prefix_
+-dp, --drive-prefix _PREFIX_
 
-:   Specifies _prefix_ as both __−−input−drive−prefix__ and
-    __−−dependency−drive−prefix__.
+:   Specifies _PREFIX_ for both __--input-drive-prefix__ and
+    __--dependency-drive-prefix__.
 
-__−MT__, __−−dependency−target−name__ _target_
+-MT, --dependency-target-name _TARGET_
 
 :   Specify the target name of the generated rule when generating a
-    dependency file (see '−−generate−dependencies').
+    dependency file (see '--generate-dependencies').
 
-__−−no−align−double__ 
+--no-align-double 
 
-:   Specifies that '−malign−double' should not be passed as a compiler argument
-    on 32−bit platforms. WARNING: this makes the ABI incompatible with the
-    cuda's kernel ABI for certain 64−bit types.
+:   Specifies that __-malign-double__ should not be passed as a compiler
+    argument on 32-bit platforms.
 
-__−nodlink__, __−−no−device−link__
+    _WARNING_: this makes the ABI incompatible with the cuda's kernel ABI for
+    certain 64-bit types.
+
+-nodlink, --no-device-link
 
 :   Skip the device link step when linking object files.
 
 Options for steering GPU code generation
 ----------------------------------------
 
-__−arch__, __−−gpu−architecture__ _arch_
+-arch, --gpu-architecture _ARCH_
 
 :   Specify the name of the class of NVIDIA 'virtual' GPU architecture for
     which the CUDA input files must be compiled. With the exception as
@@ -419,7 +419,7 @@ __−arch__, __−−gpu−architecture__ _arch_
     'compute_50', 'compute_52', 'compute_53', 'sm_20', 'sm_21', 'sm_30',
     'sm_32', 'sm_35', 'sm_37', 'sm_50', 'sm_52', 'sm_53'.
 
-__−code__, __−−gpu−code__ _CODE_...
+-code, --gpu-code _CODE_...
 
 :   Specify the name of the NVIDIA GPU to assemble and optimize PTX for.
     nvcc embeds a compiled code image in the resulting executable for each
@@ -443,7 +443,7 @@ __−code__, __−−gpu−code__ _CODE_...
     'compute_50', 'compute_52', 'compute_53', 'sm_20', 'sm_21', 'sm_30',
     'sm_32', 'sm_35', 'sm_37', 'sm_50', 'sm_52', 'sm_53'.
 
-__−gencode__, __−−generate−code__ _specification_,...
+-gencode, --generate-code _SPECIFICATION_...
 
 :   This option provides a generalization of the
     '__-arch__=_ARCH_ __-code=___CODE_,...' option combination for specifying
@@ -461,69 +461,68 @@ __−gencode__, __−−generate−code__ _specification_,...
     __-gencode__ options may be repeated for different virtual
     architectures. Allowed keywords for this option: 'arch','code'.
 
-__−rdc__, __−−relocatable−device−code__ (true|false)
+-rdc, --relocatable-device-code (true|false)
 
 :   Enable (disable) the generation of relocatable device code.
 
     If disabled, executable device code is generated.  Relocatable device code
     must be linked before it can be executed. Default value: 0.  
 
-__−e__, __−−entries__ entry,...
+-e, --entries _ENTRY_...
 
 :   Specify the global entry functions for which code must be generated.
 
     By default, code will be generated for all entry functions.
 
-__−maxrregcount__, __−−maxrregcount__ _amount_
+-maxrregcount, --maxrregcount _NUM_
 
-:   Specify the maximum amount of registers that GPU functions can use.
+:   Specify the maximum number of registers that GPU functions can use.
 
-    Until a function−specific limit, a higher value will generally increase
+    Until a function-specific limit, a higher value will generally increase
     the performance of individual GPU threads that execute this function.
     However, because thread registers are allocated from a global register
     pool on each GPU, a higher value of this option will also reduce the
     maximum thread block size, thereby reducing the amount of thread
     parallelism. Hence, a good maxrregcount value is the result of a
-    trade−off. If this option is not specified, then no maximum is assumed.
+    trade-off. If this option is not specified, then no maximum is assumed.
     Value less than the minimum registers required by ABI will be bumped up
     by the compiler to ABI minimum limit.
 
-__−use_fast_math__, __−−use_fast_math__
+-use_fast_math, --use_fast_math
 
 :   Make use of the fast math library. This implies:
-    __−−ftz=true\ −−prec−div=false\ −−prec−sqrt=false\ −−fmad=true__.
+    __--ftz=true\ --prec-div=false\ --prec-sqrt=false\ --fmad=true__.
 
-__−ftz__, __−−ftz__ (true|false)
+-ftz, --ftz (true|false)
 
-:   This option controls single−precision denormals support. '−−ftz=true'
-    flushes denormal values to zero and '−−ftz=false' preserves denormal
-    values.  '−−use_fast_math' implies '−−ftz=true'. Default value: 0.
+:   This option controls single-precision denormals support. __--ftz=true__
+    flushes denormal values to zero and __--ftz=false__ preserves denormal
+    values.  __--use_fast_math__ implies __--ftz=true__. Default value: false.
 
-__−prec−div__, __−−prec−div__ (true|false)
+-prec-div, --prec-div (true|false)
 
-:   This option controls single−precision floating−point division and
-    reciprocals. __−−prec−div=true__ enables the IEEE round−to−nearest mode and
-    __−−prec−div=false__ enables the fast approximation mode.  
-    __−−use_fast_math__ implies __−−prec−div=false__. Default value: 1.
+:   This option controls single-precision floating-point division and
+    reciprocals. __--prec-div=true__ enables the IEEE round-to-nearest mode and
+    __--prec-div=false__ enables the fast approximation mode.
+    __--use_fast_math__ implies __--prec-div=false__. Default value: true.
 
-__−prec−sqrt__, __−−prec−sqrt__ (true|false)
+-prec-sqrt, --prec-sqrt (true|false)
 
-:   This option controls single−precision floating−point squre root.
+:   This option controls single-precision floating-point squre root.
+    __--prec-sqrt=true__ enables the IEEE round-to-nearest mode and
+    __--prec-sqrt=false__ enables the fast approximation mode.
+    __--use_fast_math__ implies __--prec-sqrt=false__. Default value: true.
 
-    __−−prec−sqrt=true__ enables the IEEE round−to−nearest mode and
-    __−−prec−sqrt=false__ enables the fast approximation mode.
-    __−−use_fast_math__ implies __−−prec−sqrt=false__. Default value: 1.
+-fmad, --fmad (true|false)
 
-__−fmad__, __−−fmad__ (true|false)
-
-:   This option enables (disables) the contraction of floating−point multiplies
-    and adds/subtracts into floating−point multiply−add operations (FMAD, FFMA,
-    or DFMA). __−−use_fast_math__ implies __−−fmad=true__. Default value: 1.
+:   This option enables (disables) the contraction of floating-point multiplies
+    and adds/subtracts into floating-point multiply-add operations (FMAD, FFMA,
+    or DFMA). __--use_fast_math__ implies __--fmad=true__. Default value: true.
 
 Options for steering cuda compilation
 -------------------------------------
 
-__−default−stream__, __−−default−stream__ (legacy|null|per−thread)
+-default-stream, --default-stream (legacy|null|per-thread)
 
 :   Specify the stream that CUDA commands from the compiled program will be
     sent to by default.  
@@ -533,7 +532,7 @@ __−default−stream__, __−−default−stream__ (legacy|null|per−thread)
         streams).
 
 
-    per−thread
+    per-thread
     :   A normal CUDA stream (per thread, does not implicitly synchronize with
         other streams).
 
@@ -545,54 +544,54 @@ __−default−stream__, __−−default−stream__ (legacy|null|per−thread)
 Generic tool options 
 --------------------
 
-__−w__, __−−disable−warnings__
+-w, --disable-warnings
 
 :   Inhibit all warning messages.
 
-__−src−in−ptx__, __−−source−in−ptx__
+-src-in-ptx, --source-in-ptx
 
 :   Interleave source in PTX.
 
-__−restrict__, __−−restrict__
+-restrict, --restrict
 
 :   Programmer assertion that all kernel pointer parameters are restrict
     pointers.
 
-__−Wno−deprecated−gpu−targets__, __−−Wno−deprecated−gpu−targets__
+-Wno-deprecated-gpu-targets, --Wno-deprecated-gpu-targets
 
 :   Suppress warnings about deprecated GPU target architectures.
 
-__−Werror__, __−−Werror___kind_,..
+-Werror, --Werror _kind_..
 
 :   Make warnings of the specified kinds into errors. The following is the list
     of warning kinds accepted by this option:
 
-    cross−execution−space−call
+    cross-execution-space-call
 
     :   Be more strict about unsupported cross execution space calls. The
         compiler will generate an error instead of a warning for a call from a
         `__host__ __device__` to a `__host__` function.
 
-    Allowed values for this option: cross−execution−space−call.
+    Allowed values for this option: cross-execution-space-call.
 
-__−res−usage__, __−−resource−usage__
+-res-usage, --resource-usage
 
 :   Show resource usage such as registers and memeory of the GPU code. This
-    option implies __-−nvlink−options −−verbose__ when
-    __−−relocatable−device−code=true__ is set. Otherwise, it implies
-    __−−ptxas−options −−verbose__.
+    option implies __--nvlink-options --verbose__ when
+    __--relocatable-device-code=true__ is set. Otherwise, it implies
+    __--ptxas-options --verbose__.
 
-__−h__, __−−help__
+-h, --help
 
 :   Print this help information on this tool.
 
-__−V__, __−−version__
+-V, --version
 
 :   Print version information on this tool.
 
-__−optf__, __−−options−file__ _file_,...
+-optf, --options-file _FILE_...
 
-:   Include command line options from specified file.
+:   Include command line options from specified FILE.
 
 AUTHORS
 ======
@@ -603,7 +602,7 @@ The **nvcc** tool was built by NVIDIA ®.
 COPYRIGHT
 =========
 
-Copyright © 2005−2015 NVIDIA Corporation.
+Copyright © 2005-2015 NVIDIA Corporation.
 
 VERSION
 =======
