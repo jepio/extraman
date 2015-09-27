@@ -394,43 +394,51 @@ __−arch__, __−−gpu−architecture__ _arch_
 :   Specify the name of the class of NVIDIA 'virtual' GPU architecture for
     which the CUDA input files must be compiled. With the exception as
     described for the shorthand below, the architecture specified with this
-    option must be a 'virtual' architecture (such as compute_20). Normally,
-    this option alone does not trigger assembly of the generated PTX for a
-    'real' architecture (that is the role of nvcc option '−−gpu−code', see
-    below); rather, its purpose is to control preprocessing and compilation of
-    the input to PTX. For convenience, in case of simple nvcc compilations, the
-    following shorthand is supported. If no value for option '−−gpu−code' is
-    specified, then the value of this option defaults to the value of
-    '−−gpu−architecture'. In this situation, as only exception to the
-    description above, the value specified for '−−gpu−architecture' may be a
+    option must be a 'virtual' architecture (such as compute_20).
+
+    Normally, this option alone does not trigger assembly of the generated PTX
+    for a 'real' architecture (that is the role of nvcc option __-code__,
+    see below); rather, its purpose is to control preprocessing and compilation
+    of the input to PTX. For convenience, in case of simple nvcc compilations,
+    the following shorthand is supported. If no value for option __-code__
+    is specified, then the value of this option defaults to the value of
+    __-arch__. In this situation, as only exception to the
+    description above, the value specified for __-arch__ may be a
     'real' architecture (such as a sm_20), in which case nvcc uses the
     specified 'real' architecture and its closest 'virtual' architecture as
-    effective architecture values. For example, 'nvcc
-    __−−gpu−architecture__=sm_20' is equivalent to 'nvcc
-    __−−gpu−architecture__=compute_20 __−−gpu−code__=sm_20,compute_20'.
-    Allowed values for this option: 'compute_20', 'compute_30',
-    'compute_32', 'compute_35', 'compute_37', 'compute_50', 'compute_52',
-    'compute_53', 'sm_20', 'sm_21', 'sm_30', 'sm_32', 'sm_35', 'sm_37',
-    'sm_50', 'sm_52', 'sm_53'.
+    effective architecture values. For example,
 
-__−code__, __−−gpu−code__ _code_,...
+        nvcc -arch=sm_20
+
+    is equivalent to
+
+        nvcc -arch=compute_20 -code=sm_20,compute_20
+
+    Allowed values for this option:  
+    'compute_20', 'compute_30', 'compute_32', 'compute_35', 'compute_37',
+    'compute_50', 'compute_52', 'compute_53', 'sm_20', 'sm_21', 'sm_30',
+    'sm_32', 'sm_35', 'sm_37', 'sm_50', 'sm_52', 'sm_53'.
+
+__−code__, __−−gpu−code__ _CODE_...
 
 :   Specify the name of the NVIDIA GPU to assemble and optimize PTX for.
     nvcc embeds a compiled code image in the resulting executable for each
-    specified _code_ architecture, which is a true binary load image
-    for each 'real' architecture (such as sm_20), and PTX code for the
-    'virtual' architecture (such as compute_20). During runtime, such
-    embedded PTX code is dynamically compiled by the CUDA runtime system if
-    no binary load image is found for the 'current' GPU. Architectures
-    specified for options '−−gpu−architecture' and '−−gpu−code' may be
-    'virtual' as well as 'real', but the _code_ architectures must be
-    compatible with the _arch_ architecture. When the '−−gpu−code'
-    option is used, the value for the '−−gpu−architecture' option must be a
-    'virtual' PTX architecture. For instance,
-    '−−gpu−architecture=compute_35' is not compatible with
-    '−−gpu−code=sm_30', because the earlier compilation stages will assume
-    the availability of 'compute_35' features that are not present on
-    'sm_30'. Allowed values for this option:
+    specified _CODE_ architecture, which is a true binary load image for each
+    'real' architecture (such as sm_20), and PTX code for the 'virtual'
+    architecture (such as compute_20). During runtime, such embedded PTX code
+    is dynamically compiled by the CUDA runtime system if no binary load image
+    is found for the 'current' GPU.
+
+    Architectures specified for options __-arch__ and
+    __-code__ may be 'virtual' as well as 'real', but the _CODE_
+    architectures must be compatible with the _ARCH_ architecture. When the
+    __-code__ option is used, the value for the __-arch__
+    option must be a 'virtual' PTX architecture. For instance,
+    __-arch=compute_35__ is not compatible with
+    __-code=sm_30__, because the earlier compilation stages will assume
+    the availability of 'compute_35' features that are not present on 'sm_30'.
+
+    Allowed values for this option:  
     'compute_20', 'compute_30', 'compute_32', 'compute_35', 'compute_37',
     'compute_50', 'compute_52', 'compute_53', 'sm_20', 'sm_21', 'sm_30',
     'sm_32', 'sm_35', 'sm_37', 'sm_50', 'sm_52', 'sm_53'.
@@ -438,15 +446,19 @@ __−code__, __−−gpu−code__ _code_,...
 __−gencode__, __−−generate−code__ _specification_,...
 
 :   This option provides a generalization of the
-    '−−gpu−architecture=_arch_ __−−gpu−code=___code_, ...'
-    option combination for specifying nvcc behavior with respect to code
-    generation. Where use of the previous options generates code for
-    different 'real' architectures with the PTX for the same 'virtual'
-    architecture, option '−−generate−code' allows multiple PTX generations
-    for different 'virtual' architectures. In fact,
-    '−−gpu−architecture=_arch_ __−−gpu−code=___code_, ...' is
-    equivalent to '−−generate−code arch=_arch_,code=_code_,...'.
-    '−−generate−code' options may be repeated for different virtual
+    '__-arch__=_ARCH_ __-code=___CODE_,...' option combination for specifying
+    nvcc behavior with respect to code generation. Where use of the previous
+    options generates code for different 'real' architectures with the PTX for
+    the same 'virtual' architecture, option __-gencode__ allows multiple
+    PTX generations for different 'virtual' architectures. In fact,
+
+        nvcc -arch=ARCH -code=CODE,...
+
+    is equivalent to
+
+        nvcc -gencode arch=ARCH,code=CODE,...
+
+    __-gencode__ options may be repeated for different virtual
     architectures. Allowed keywords for this option: 'arch','code'.
 
 __−rdc__, __−−relocatable−device−code__ (true|false)
