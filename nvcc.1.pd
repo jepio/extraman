@@ -214,11 +214,14 @@ Options for specifying behavior of compiler/linker
 
 -lineinfo, --generate-line-info
 
-:   Generate line-number information for device code.
+:   Generate line-number information for device code. Unlike __-G__, this
+    option does not significantly impact performance.
 
--O_level_, --optimize _level_
+-O*level*, --optimize _level_
 
-:   Specify optimization _level_ for host code.
+:   Specify optimization _level_ for host code. Allowed values are 0-3. Device
+    code optimization is on by default, unless _level_ is set to 0 using this
+    option.
 
 -ftemplate-backtrace-limit, --ftemplate-backtrace-limit _limit_
 
