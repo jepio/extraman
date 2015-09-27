@@ -4,7 +4,7 @@
 
 NAME
 ====
-nvcc − NVIDIA (R) Cuda compiler driver
+nvcc − NVIDIA ® Cuda compiler driver
 
 
 SYNOPSIS
@@ -582,14 +582,20 @@ __−optf__, __−−options−file__ _file_,...
 
 :   Include command line options from specified file.
 
+AUTHORS
+======
+
+This man page was authored by Jeremi Piotrowski <jeremi.piotrowski@gmail.com>.  
+The **nvcc** tool was built by NVIDIA ®.
+
 COPYRIGHT
 =========
 
-Copyright (C) 2005−2015 NVIDIA Corporation Built on
+Copyright © 2005−2015 NVIDIA Corporation.
 
 VERSION
 =======
 
-Tue\_Aug\_11\_14:27:32\_CDT\_2015 Cuda compilation tools, release 7.5,
+Tue_Aug_11_14:27:32_CDT_2015 Cuda compilation tools, release 7.5,
 V7.5.17
 
