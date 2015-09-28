@@ -1,7 +1,11 @@
-nvcc.1: nvcc.1.pd
+pages = nvcc.1 nvprof.1
+all: $(pages)
+
+%: %.pd
 	pandoc -s -f markdown -t man $< -o $@
 
-clean:
-	rm -f nvcc.1
 
-.PHONY: clean
+clean:
+	rm -f $(pages)
+
+.PHONY: clean all
