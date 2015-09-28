@@ -15,9 +15,9 @@ nvprof [_OPTION_]... [_APPLICATION_] [_APPLICATION-ARGUMENT_]...
 OPTIONS
 =======
 
-**−−aggregate−mode** &lt;on|off&gt;
+−−aggregate−mode (on|off)
 
-This option turns on/off aggregate mode for events and metrics specified
+:   This option turns on/off aggregate mode for events and metrics specified
 by subsequent "−−events" and "−−metrics" options. Those event/metric
 values will be collected for each domain instance, instead of the whole
 device. Allowed values:
@@ -26,14 +26,14 @@ on − turn on aggregate mode (default)
 
 off − turn off aggregate mode
 
-**−−analysis−metrics**
+−−analysis−metrics
 
-Collect profiling data that can be imported to Visual Profiler’s
+:   Collect profiling data that can be imported to Visual Profiler’s
 "analysis" mode. Note: Use "−−export−profile" to specify an export file.
 
-**−−concurrent−kernels** &lt;on|off&gt;
+−−concurrent−kernels (on|off)
 
-Turn on/off concurrent kernel execution. If concurrent kernel execution
+:   Turn on/off concurrent kernel execution. If concurrent kernel execution
 is off, all kernels running on one device will be serialized. Allowed
 values:
 
@@ -41,9 +41,9 @@ on − turn on concurrent kernel execution (default)
 
 off − turn off concurrent kernel execution
 
-**−−devices** &lt;device ids&gt;
+−−devices (device ids)
 
-This option changes the scope of subsequent "−−events", "−−metrics",
+:   This option changes the scope of subsequent "−−events", "−−metrics",
 "−−query−events" and "−−query−metrics" options. Allowed values:
 
 all − change scope to all valid devices
@@ -52,9 +52,9 @@ comma−separated device IDs − change scope to specified
 
 devices
 
-**−e**, **−−events** &lt;event names&gt;
+−e, −−events (event names)
 
-Specify the events to be profiled on certain device(s). Multiple event
+:   Specify the events to be profiled on certain device(s). Multiple event
 names separated by comma can be specified. Which device(s) are profiled
 is controlled by the "−−devices" option. Otherwise events will be
 collected on all devices. For a list of available events, use
@@ -62,21 +62,21 @@ collected on all devices. For a list of available events, use
 each device. Use "−−devices" and "−−kernels" to select a specific kernel
 invocation.
 
-**−−kernels** &lt;kernel path syntax&gt;
+−−kernels (kernel path syntax)
 
-This option changes the scope of subsequent "−−events", "−−metrics"
+:   This option changes the scope of subsequent "−−events", "−−metrics"
 options. The syntax is as following:
 
-&lt;kernel name&gt;
+(kernel name)
 
 or
 
-&lt;context id/name&gt;:&lt;stream id/name&gt;:&lt;kernel
-name&gt;:&lt;invocation&gt;
+(context id/name):&lt;stream id/name&gt;:&lt;kernel
+name):(invocation&gt;
 
 The context/stream IDs, names, kernel name and invocation can be regular
 expressions. Empty string matches any number or characters. If
-&lt;context id/name&gt; or &lt;stream id/name&gt; is a positive number,
+(context id/name) or &lt;stream id/name&gt; is a positive number,
 it’s strictly matched against the CUDA context/stream ID. Otherwise it’s
 treated as a regular expression and matched against the context/stream
 name specified by the NVTX library. If the invocation count is a
@@ -85,9 +85,9 @@ kernel. Otherwise it’s treated as a regular expression. Example:
 **−−kernels** "1:foo:bar:2" − profile any kernel whose name contains
 "bar" and was the 2nd instance on context 1 and on stream named "foo".
 
-**−m**, **−−metrics** &lt;metric names&gt;
+−m, −−metrics (metric names)
 
-Specify the metrics to be profiled on certain device(s). Multiple metric
+:   Specify the metrics to be profiled on certain device(s). Multiple metric
 names separated by comma can be specified. Which device(s) are profiled
 is controlled by the "−−devices" option. Otherwise metrics will be
 collected on all devices. For a list of available metrics, use
@@ -95,29 +95,29 @@ collected on all devices. For a list of available metrics, use
 for each device. Use "−−devices" and "−−kernels" to select a specific
 kernel invocation.
 
-**−−profile−all−processes**
+−−profile−all−processes
 
-Profile all processes launched by the same user who launched this nvprof
+:   Profile all processes launched by the same user who launched this nvprof
 instance. Note: Only one instance of nvprof can run with this option at
 the same time. Under this mode, there’s no need to specify an
 application to run.
 
-**−−profile−api−trace** &lt;none|runtime|driver|all&gt;
+−−profile−api−trace (none|runtime|driver|all)
 
-Turn on/off CUDA runtime/driver API tracing. Allowed values:
+:   Turn on/off CUDA runtime/driver API tracing. Allowed values:
 
 none − turn off API tracing
 
 runtime − only turn on CUDA runtime API tracing driver − only turn on
 CUDA driver API tracing all − turn on all API tracing (default)
 
-**−−profile−child−processes**
+−−profile−child−processes
 
-Profile the application and all child processes launched by it.
+:   Profile the application and all child processes launched by it.
 
-**−−profile−from−start** &lt;on|off&gt;
+−−profile−from−start (on|off)
 
-Enable/disable profiling from the start of the application. If it’s
+:   Enable/disable profiling from the start of the application. If it’s
 disabled, the application can use {cu,cuda}Profiler{Start,Stop} to turn
 on/off profiling. Allowed values:
 
@@ -125,19 +125,19 @@ on − enable profiling from start (default)
 
 off − disable profiling from start
 
-**−−query−events**
+−−query−events
 
-List all the events available on the device(s). Device(s) queried can be
+:   List all the events available on the device(s). Device(s) queried can be
 controlled by the "−−devices" option.
 
-**−−query−metrics**
+−−query−metrics
 
-List all the metrics available on the device(s). Device(s) queried can
+:   List all the metrics available on the device(s). Device(s) queried can
 be controlled by the "−−devices" option.
 
-**−−replay−mode** &lt;mode&gt;
+−−replay−mode (mode)
 
-Choose replay mode used when not all events/metrics can be collected in
+:   Choose replay mode used when not all events/metrics can be collected in
 a single run. Allowed values:
 
 disabled − replay is disabled, events/metrics couldn’t
@@ -151,24 +151,24 @@ application − the entire application is replayed.
 This is incompatible with "−−profile−all−processes" or
 "profile−child−processes"
 
-**−−system−profiling** &lt;on|off&gt;
+−−system−profiling (on|off)
 
-Turn on/off power, clock, and thermal profiling. Allowed values:
+:   Turn on/off power, clock, and thermal profiling. Allowed values:
 
 on − turn on system profiling
 
 off − turn off system profiling (default)
 
-**−t**, **−−timeout** &lt;seconds&gt;
+−t, −−timeout (seconds)
 
-Set an execution timeout (in seconds) for the CUDA application. Note:
+:   Set an execution timeout (in seconds) for the CUDA application. Note:
 Timeout starts counting from the moment the CUDA driver is initialized.
 If the application doesn’t call any CUDA APIs, timeout won’t be
 triggered.
 
-**−−unified−memory−profiling** &lt;per−process−device|off&gt;
+−−unified−memory−profiling (per−process−device|off)
 
-Options for unified memory profiling. Allowed values:
+:   Options for unified memory profiling. Allowed values:
 
 per−process−device − collect counts for each process
 
@@ -176,24 +176,24 @@ and each device
 
 off − turn off unified memory profiling (default)
 
-**−−cpu−profiling** &lt;on|off&gt;
+−−cpu−profiling (on|off)
 
-Turn on CPU profiling. Note: CPU profiling is not supported in
+:   Turn on CPU profiling. Note: CPU profiling is not supported in
 multi−process mode.
 
-**−−cpu−profiling−frequency** &lt;frequency&gt;
+−−cpu−profiling−frequency (frequency)
 
-Set the CPU profiling frequency in samples per second. Default is 100Hz.
+:   Set the CPU profiling frequency in samples per second. Default is 100Hz.
 Maximum is 500Hz.
 
-**−−cpu−profiling−max−depth** &lt;depth&gt;
+−−cpu−profiling−max−depth (depth)
 
-Set the maximum depth of each call stack. Zero means no limit. Default
+:   Set the maximum depth of each call stack. Zero means no limit. Default
 is zero.
 
-**−−cpu−profiling−mode** &lt;mode&gt;
+−−cpu−profiling−mode (mode)
 
-Set the output mode of CPU profiling. Allowed values:
+:   Set the output mode of CPU profiling. Allowed values:
 
 "flat" − Show flat profile
 
@@ -202,15 +202,15 @@ functions at the bottom
 
 (default)
 
-**−−cpu−profiling−percentage−threshold** &lt;threshold&gt;
+−−cpu−profiling−percentage−threshold (threshold)
 
-Filter out the entries that are below the set percentage threshold. The
+:   Filter out the entries that are below the set percentage threshold. The
 limit should be an integer between 0 and 100, inclusive. Zero means no
 limit. Default is zero.
 
-**−−cpu−profiling−scope** &lt;scope&gt;
+−−cpu−profiling−scope (scope)
 
-Choose the profiling scope. Allowed values:
+:   Choose the profiling scope. Allowed values:
 
 "function" − Each level in the stack trace represents
 
@@ -220,27 +220,27 @@ a distinct function (default)
 
 a distinct instruction address
 
-**−−cpu−profiling−show−ccff** &lt;on|off&gt;
+−−cpu−profiling−show−ccff (on|off)
 
-Whether to print Common Compiler Feedback Format (CCFF) messages
+:   Whether to print Common Compiler Feedback Format (CCFF) messages
 embedded in the binary. Note: this option implies "−−cpu−profiling−scope
 instruction".
 
-**−−cpu−profiling−show−library** &lt;on|off&gt;
+−−cpu−profiling−show−library (on|off)
 
-Whether to print the library name for each sample.
+:   Whether to print the library name for each sample.
 
-**−−cpu−profiling−thread−mode** &lt;mode&gt;
+−−cpu−profiling−thread−mode (mode)
 
-Set the thread mode of CPU profiling. Allowed values:
+:   Set the thread mode of CPU profiling. Allowed values:
 
 "separated" − Show separate profile for each thread
 
 "aggregated" − Aggregate data from all threads
 
-**−−context−name** &lt;name&gt;
+−−context−name (name)
 
-Name of the CUDA context.
+:   Name of the CUDA context.
 
 "%i" in the context name string is replaced with
 
@@ -250,9 +250,9 @@ the ID of the context.
 
 the process ID of the application being profiled.
 
-"%q{&lt;ENV&gt;}" in the context name string is replaced
+"%q{(ENV)}" in the context name string is replaced
 
-with the value of the environment variable "&lt;ENV&gt;". If the
+with the value of the environment variable "(ENV)". If the
 environment variable is not set it’s an error.
 
 "%h" in the context name string is replaced with
@@ -271,17 +271,17 @@ the hostname of the system.
 |                |                |                | output.        |                |
 +----------------+----------------+----------------+----------------+----------------+
 
-**−−demangling** &lt;on|off&gt;
+−−demangling (on|off)
 
-Turn on/off C++ name demangling of function names. Allowed values:
+:   Turn on/off C++ name demangling of function names. Allowed values:
 
 on − turn on demangling (default)
 
 off − turn off demangling
 
-**−u**, **−−normalized−time−unit** &lt;s|ms|us|ns|col|auto&gt;
+−u, −−normalized−time−unit (s|ms|us|ns|col|auto)
 
-Specify the unit of time that will be used in the output. Allowed
+:   Specify the unit of time that will be used in the output. Allowed
 values:
 
 s − second, ms − millisecond, us − microsecond,
@@ -294,45 +294,45 @@ auto (default) − the scale is chosen for each value
 
 based on its length.
 
-**−−print−api−summary**
+−−print−api−summary
 
-Print a summary of CUDA runtime/driver API calls.
+:   Print a summary of CUDA runtime/driver API calls.
 
-**−−print−api−trace**
+−−print−api−trace
 
-Print CUDA runtime/driver API trace.
+:   Print CUDA runtime/driver API trace.
 
-**−−print−gpu−summary**
+−−print−gpu−summary
 
-Print a summary of the activities on the GPU (including CUDA kernels and
+:   Print a summary of the activities on the GPU (including CUDA kernels and
 memcpy’s/memset’s).
 
-**−−print−gpu−trace**
+−−print−gpu−trace
 
-Print individual kernel invocations (including CUDA memcpy’s/memset’s)
+:   Print individual kernel invocations (including CUDA memcpy’s/memset’s)
 and sort them in chronological order. In event/metric profiling mode,
 show events/metrics for each kernel invocation.
 
-**−s**, **−−print−summary**
+−s, −−print−summary
 
-Print a summary of the profiling result on screen. Note: This is the
+:   Print a summary of the profiling result on screen. Note: This is the
 default unless "−−export−profile" or other print options are used.
 
-**−−print−summary−per−gpu**
+−−print−summary−per−gpu
 
-Print a summary of the profiling result for each GPU.
+:   Print a summary of the profiling result for each GPU.
 
-**−−process−name** &lt;name&gt;
+−−process−name (name)
 
-Name of the process.
+:   Name of the process.
 
 "%p" in the process name string is replaced with
 
 the process ID of the application being profiled.
 
-"%q{&lt;ENV&gt;}" in the process name string is replaced
+"%q{(ENV)}" in the process name string is replaced
 
-with the value of the environment variable "&lt;ENV&gt;". If the
+with the value of the environment variable "(ENV)". If the
 environment variable is not set it’s an error.
 
 "%h" in the process name string is replaced with
@@ -345,13 +345,13 @@ name string is replaced with
 
 "%". Any other character following "%" is illegal.
 
-**−−quiet**
+−−quiet
 
-Suppress all nvprof output.
+:   Suppress all nvprof output.
 
-**−−stream−name** &lt;name&gt;
+−−stream−name (name)
 
-Name of the CUDA stream.
+:   Name of the CUDA stream.
 
 "%i" in the stream name string is replaced with the
 
@@ -361,9 +361,9 @@ ID of the stream.
 
 the process ID of the application being profiled.
 
-"%q{&lt;ENV&gt;}" in the stream name string is replaced
+"%q{(ENV)}" in the stream name string is replaced
 
-with the value of the environment variable "&lt;ENV&gt;". If the
+with the value of the environment variable "(ENV)". If the
 environment variable is not set it’s an error.
 
 "%h" in the stream name string is replaced with
@@ -374,18 +374,18 @@ the hostname of the system.
 
 "%". Any other character following "%" is illegal.
 
-**−o**, **−−export−profile** &lt;filename&gt;
+−o, −−export−profile (filename)
 
-Export the result file which can be imported later or opened by the
+:   Export the result file which can be imported later or opened by the
 NVIDIA Visual Profiler.
 
 "%p" in the file name string is replaced with the
 
 process ID of the application being profiled.
 
-"%q{&lt;ENV&gt;}" in the file name string is replaced
+"%q{(ENV)}" in the file name string is replaced
 
-with the value of the environment variable "&lt;ENV&gt;". If the
+with the value of the environment variable "(ENV)". If the
 environment variable is not set it’s an error.
 
 "%h" in the file name string is replaced with the
@@ -402,18 +402,18 @@ If the application being profiled creates child processes, or if
 ’−−profile−all−processes’ is used, the "%p" format is needed to get
 correct export files for each process.
 
-**−f**, **−−force−overwrite**
+−f, −−force−overwrite
 
-Force overwriting all output files (any existing files will be
+:   Force overwriting all output files (any existing files will be
 overwritten).
 
-**−i**, **−−import−profile** &lt;filename&gt;
+−i, −−import−profile (filename)
 
-Import a result profile from a previous run.
+:   Import a result profile from a previous run.
 
-**−−log−file** &lt;filename&gt;
+−−log−file (filename)
 
-Make nvprof send all its output to the specified file, or one of the
+:   Make nvprof send all its output to the specified file, or one of the
 standard channels. The file will be overwritten. If the file doesn’t
 exist, a new one will be created.
 
@@ -429,9 +429,9 @@ channel (stderr). Note: This is the default.
 
 process ID of the application being profiled.
 
-"%q{&lt;ENV&gt;}" in the file name string is replaced
+"%q{(ENV)}" in the file name string is replaced
 
-with the value of the environment variable "&lt;ENV&gt;". If the
+with the value of the environment variable "(ENV)". If the
 environment variable is not set it’s an error.
 
 "%h" in the file name string is replaced with the
@@ -442,13 +442,13 @@ hostname of the system.
 
 Any other character following "%" is illegal.
 
-**−h**, **−−help**
+−h, −−help
 
-Print this help information.
+:   Print this help information.
 
-**−V**, **−−version**
+−V, −−version
 
-Print version information of this tool.
+:   Print version information of this tool.
 
 AUTHORS
 ======
