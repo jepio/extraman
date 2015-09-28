@@ -1,0 +1,612 @@
+% NVCC(1) NVIDIA | CUDA Toolkit Documentation
+%
+% 2015-09-27
+
+NAME
+====
+nvcc - NVIDIA ® Cuda compiler driver
+
+
+SYNOPSIS
+========
+nvcc [_OPTION_]... [_FILE_]...
+
+DESCRIPTION
+===========
+
+Options for specifying the compilation phase
+--------------------------------------------
+
+More exactly, these options specify up to which stage the input files must be
+compiled, according to the following compilation trajectories for different
+input file types:
+
+------------------ -  ---------------------------------------------------------
+.c/.cc/.cpp/.cxx   :  preprocess, compile, link 
+
+.o                 :  link 
+
+.i/.ii             :  compile, link 
+
+.cu                :  preprocess, cuda frontend, PTX assemble, merge with host 
+                      C code, compile, link
+
+.gpu               :  cicc compile into cubin                     
+
+.ptx               :  PTX assemble into cubin.                    
+------------------ -  ---------------------------------------------------------
+
+-cuda, --cuda
+
+:   Compile all .cu input files to .cu.cpp.ii output.
+
+-cubin, --cubin
+
+:   Compile all .cu/.gpu/.ptx input files to device-only .cubin files.
+
+    This step discards the host code for each .cu input file.
+
+-fatbin, --fatbin
+
+:   Compile all .cu/.gpu/.ptx/.cubin input files to device-only .fatbin files.
+
+    This step discards the host code for each .cu input file.
+
+-ptx, --ptx
+
+:   Compile all .cu/.gpu input files to device-only .ptx files.
+
+    This step discards the host code for each of these input file.
+
+-gpu, --gpu
+
+:   Compile all .cu input files to device-only .gpu files.
+
+    This step discards the host code for each .cu input file.
+
+-E, --preprocess
+
+:   Preprocess all .c/.cc/.cpp/.cxx/.cu input files.
+
+-M, --generate-dependencies
+
+:   Generate a dependency file that can be included in a makefile for the
+    .c/.cc/.cpp/.cxx/.cu input file (more than one are not allowed in this
+    mode).
+
+-c, --compile
+
+:   Compile each .c/.cc/.cpp/.cxx/.cu input file into an object file.
+
+-dc, --device-c
+
+:   Compile each .c/.cc/.cpp/.cxx/.cu input file into an object file that
+    contains relocatable device code. It is equivalent to
+    __--relocatable-device-code=true --compile__.
+
+-dw, --device-w
+
+:   Compile each .c/.cc/.cpp/.cxx/.cu input file into an object file that
+    contains executable device code. It is equivalent to
+     __--relocatable-device-code=false --compile__.
+
+-dlink, --device-link
+
+:   Link object files with relocatable device code and .ptx/.cubin/.fatbin
+    files into an object file with executable device code, which can be
+    passed to the host linker.
+
+-link, --link
+
+:   This option specifies the default behavior: compile and link all inputs.
+
+-lib, --lib
+
+:   Compile all inputs into object files (if necessary) and add the results
+    to the specified output library file.
+
+-run, --run
+
+:   This option compiles and links all inputs into an executable, and
+    executes it. Or, when the input is a single executable, it is executed
+    without any compilation or linking. This step is intended for developers
+    who do not want to be bothered with setting the necessary environment
+    variables; these are set temporarily by nvcc.
+
+File and path specifications 
+----------------------------
+
+-o, --output-file _FILE_
+
+:   Specify name and location of the output _FILE_.
+
+    Only a single input file is allowed when this option is present in nvcc
+    non-linking/archiving mode.
+
+-include, --pre-include _FILE_...
+
+:   Specify header *FILE*s that must be preincluded during preprocessing.
+
+-l, --library _library_...
+
+:   Specify libraries to be used in the linking stage without the library
+    file extension. The libraries are searched for on the library search
+    paths that have been specified using option __--library-path__.
+
+-D, --define-macro _DEF_...
+
+:   Specify macro definitions to define for use during preprocessing or
+    compilation.
+
+-U, --undefine-macro _DEF_...
+
+:   Undefine macro definitions during preprocessing or compilation.
+
+-I, --include-path _PATH_...
+
+:   Specify include search paths.
+
+-isystem, --system-include _PATH_...
+
+:   Specify system include search paths.
+
+-L, --library-path _PATH_...
+
+:   Specify library search paths.
+
+-odir, --output-directory _DIRECTORY_
+
+:   Specify the directory of the output file.
+
+    This option is intended for letting the dependency generation step (see
+    __--generate-dependencies__) generate a rule that defines the target object
+    file in the proper directory.
+
+-ccbin, --compiler-bindir _PATH_
+
+:   Specify the directory in which the host compiler executable resides.
+
+    The host compiler executable name can be also specified to ensure that the
+    correct host compiler is selected. In addition, driver prefix options
+    (__--input-drive-prefix__, __--dependency-drive-prefix__, or
+    __--drive-prefix__) may need to be specified, if nvcc is executed in a
+    Cygwin shell or a MinGW shell on Windows.
+
+-cudart, --cudart (none|shared|static)
+
+:   Specify the type of CUDA runtime library to be used: no CUDA runtime
+    library, shared/dynamic CUDA runtime library, or static CUDA runtime
+    library. Allowed values for this option: 'none', 'shared', 'static'.
+    Default value: 'static'.
+
+-ldir, --libdevice-directory _DIRECTORY_
+
+:   Specify the _DIRECTORY_ that contains the libdevice library files when
+    option __--dont-use-profile__ is used. Libdevice library files are located
+    in the 'nvvm/libdevice' directory in the CUDA toolkit.
+
+--cl-version _CL-VERSION-NUMBER_
+
+:   Specify the version of Microsoft Visual Studio installation.
+
+    _Note_: this option is to be used in conjunction with __--use-local-env__,
+    and is ignored when __--use-local-env__ is not specified. Allowed values
+    for this option: 2010,2012,2013.
+
+--use-local-env
+
+:   Specify whether the environment is already set up for the host compiler.
+
+Options for specifying behavior of compiler/linker
+--------------------------------------------------
+
+-pg, --profile
+
+:   Instrument generated code/executable for use by gprof (Linux only).
+
+-g, --debug
+
+:   Generate debug information for host code.
+
+-G, --device-debug
+
+:   Generate debug information for device code.
+
+-lineinfo, --generate-line-info
+
+:   Generate line-number information for device code. Unlike __-G__, this
+    option does not significantly impact performance.
+
+-O*level*, --optimize _level_
+
+:   Specify optimization _level_ for host code. Allowed values are 0-3. Device
+    code optimization is on by default, unless _level_ is set to 0 using this
+    option.
+
+-ftemplate-backtrace-limit, --ftemplate-backtrace-limit _limit_
+
+:   When compiling CUDA source code, set the maximum number of template
+    instantiation notes for a single warning or error to _limit_. A
+    value of 0 is allowed, and indicates that no limit should be enforced.
+
+    _Note_: This flag does not affect the host compiler used for compiling
+    host part of the CUDA source code.
+
+-shared, --shared
+
+:   Generate a shared library during linking.
+
+    Use option __--linker-options__ when other linker options are required for
+    more control.
+
+-x, --x (c|c++|cu)
+
+:   Explicitly specify the language for the input files, rather than letting
+    the compiler choose a default based on the file name suffix. Allowed
+    values for this option: 'c','c++','cu'.
+
+-std, --std (c++11)
+
+:   Select a particular C++ dialect.
+
+    The only value currently supported is 'c++11'. Enabling C++11 mode also
+    turns on C++11 mode for the host compiler.
+
+-nohdinitlist, --no-host-device-initializer-list
+
+:   Do not implicitly consider member functions of `std::initializer_list` as
+    `__host__ __device__` functions.
+
+-nohdmoveforward, --no-host-device-move-forward
+
+:   Do not implicitly consider `std::move` and `std::forward` as `__host__
+    __device__` function templates.
+
+-expt-relaxed-constexpr, --expt-relaxed-constexpr
+
+:   Experimental flag: Allow host code to invoke `__device__` constexpr
+    functions, and device code to invoke `__host__` constexpr functions.
+
+-expt-extended-lambda, --expt-extended-lambda
+
+:   Experimental flag: Allow `__host__`, `__device__` annotations in
+    lambda declaration.
+
+-m, --machine (32|64)
+
+:   Specify 32 vs 64 bit architecture. Default value: 64.
+
+Options for passing specific phase options
+------------------------------------------
+These allow for passing options directly to the intended compilation phase.
+Using these, users have the ability to pass options to the lower level
+compilation tools, without the need for nvcc to know about each and every such
+option.
+
+-Xcompiler, --compiler-options _OPTION_...
+
+:   Specify options directly to the compiler/preprocessor.
+
+-Xlinker, --linker-options _OPTION_...
+
+:   Specify options directly to the host linker.
+
+-Xarchive, --archive-options _OPTION_...
+
+:   Specify options directly to library manager.
+
+-Xptxas, --ptxas-options _OPTION_...
+
+:   Specify options directly to ptxas, the PTX optimizing assembler.
+
+-Xnvlink, --nvlink-options _OPTION_...
+
+:   Specify options directly to nvlink.
+
+Miscellaneous options for guiding the compiler driver
+-----------------------------------------------------
+
+-noprof, --dont-use-profile
+
+:   nvcc uses the nvcc.profiles file for compilation. When this option is
+    specified, the profile file is not used.
+
+-dryrun, --dryrun
+
+:   Do not execute the compilation commands generated by nvcc. Instead,
+    list them.
+
+-v, --verbose
+
+:   List the compilation commands generated by this compiler driver, but do
+    not suppress their execution.
+
+-keep, --keep
+
+:   Keep all intermediate files that are generated during internal
+    compilation steps.
+
+-keep-dir, --keep-dir _DIRECTORY_
+
+:   Keep all intermediate files that are generated during internal compilation
+    steps in this directory.
+
+-save-temps, --save-temps
+
+:   This option is an alias of __--keep__.
+
+-clean, --clean-targets
+
+:   This option reverses the behavior of __nvcc__.
+
+    When specified, none of the compilation phases will be executed.  Instead,
+    all of the non-temporary files that nvcc would otherwise create will be
+    deleted.
+
+-run-args, --run-args _ARG_...
+
+:   Used in combination with option __--run__ to specify command line arguments
+    for the executable.
+
+-idp, --input-drive-prefix _PREFIX_
+
+:   On Windows, all command line arguments that refer to file names must be
+    converted to the Windows native format before they are passed to pure
+    Windows executables. This option specifies how the current development
+    environment represents absolute paths. Use '/cygwin/' as _prefix_ for
+    Cygwin build environments, and '/' as _prefix_ for MinGW.
+
+-ddp, --dependency-drive-prefix _PREFIX_
+
+:   On Windows, when generating dependency files (see
+    __--generate-dependencies__) all file names must be converted appropriately
+    for the instance of 'make' that is used. Some instances of 'make' have
+    trouble with the colon in absolute paths in the native Windows format,
+    which depends on the environment in which the 'make' instance has been
+    compiled. Use '/cygwin/' as _prefix_ for a Cygwin make, and '/' as
+    _prefix_ for MinGW. Or leave these file names in the native Windows
+    format by specifying nothing.
+
+-dp, --drive-prefix _PREFIX_
+
+:   Specifies _PREFIX_ for both __--input-drive-prefix__ and
+    __--dependency-drive-prefix__.
+
+-MT, --dependency-target-name _TARGET_
+
+:   Specify the target name of the generated rule when generating a
+    dependency file (see '--generate-dependencies').
+
+--no-align-double 
+
+:   Specifies that __-malign-double__ should not be passed as a compiler
+    argument on 32-bit platforms.
+
+    _WARNING_: this makes the ABI incompatible with the cuda's kernel ABI for
+    certain 64-bit types.
+
+-nodlink, --no-device-link
+
+:   Skip the device link step when linking object files.
+
+Options for steering GPU code generation
+----------------------------------------
+
+-arch, --gpu-architecture _ARCH_
+
+:   Specify the name of the class of NVIDIA 'virtual' GPU architecture for
+    which the CUDA input files must be compiled. With the exception as
+    described for the shorthand below, the architecture specified with this
+    option must be a 'virtual' architecture (such as compute_20).
+
+    Normally, this option alone does not trigger assembly of the generated PTX
+    for a 'real' architecture (that is the role of nvcc option __-code__,
+    see below); rather, its purpose is to control preprocessing and compilation
+    of the input to PTX. For convenience, in case of simple nvcc compilations,
+    the following shorthand is supported. If no value for option __-code__
+    is specified, then the value of this option defaults to the value of
+    __-arch__. In this situation, as only exception to the
+    description above, the value specified for __-arch__ may be a
+    'real' architecture (such as a sm_20), in which case nvcc uses the
+    specified 'real' architecture and its closest 'virtual' architecture as
+    effective architecture values. For example,
+
+        nvcc -arch=sm_20
+
+    is equivalent to
+
+        nvcc -arch=compute_20 -code=sm_20,compute_20
+
+    Allowed values for this option:  
+    'compute_20', 'compute_30', 'compute_32', 'compute_35', 'compute_37',
+    'compute_50', 'compute_52', 'compute_53', 'sm_20', 'sm_21', 'sm_30',
+    'sm_32', 'sm_35', 'sm_37', 'sm_50', 'sm_52', 'sm_53'.
+
+-code, --gpu-code _CODE_...
+
+:   Specify the name of the NVIDIA GPU to assemble and optimize PTX for.
+    nvcc embeds a compiled code image in the resulting executable for each
+    specified _CODE_ architecture, which is a true binary load image for each
+    'real' architecture (such as sm_20), and PTX code for the 'virtual'
+    architecture (such as compute_20). During runtime, such embedded PTX code
+    is dynamically compiled by the CUDA runtime system if no binary load image
+    is found for the 'current' GPU.
+
+    Architectures specified for options __-arch__ and
+    __-code__ may be 'virtual' as well as 'real', but the _CODE_
+    architectures must be compatible with the _ARCH_ architecture. When the
+    __-code__ option is used, the value for the __-arch__
+    option must be a 'virtual' PTX architecture. For instance,
+    __-arch=compute_35__ is not compatible with
+    __-code=sm_30__, because the earlier compilation stages will assume
+    the availability of 'compute_35' features that are not present on 'sm_30'.
+
+    Allowed values for this option:  
+    'compute_20', 'compute_30', 'compute_32', 'compute_35', 'compute_37',
+    'compute_50', 'compute_52', 'compute_53', 'sm_20', 'sm_21', 'sm_30',
+    'sm_32', 'sm_35', 'sm_37', 'sm_50', 'sm_52', 'sm_53'.
+
+-gencode, --generate-code _SPECIFICATION_...
+
+:   This option provides a generalization of the
+    '__-arch__=_ARCH_ __-code=___CODE_,...' option combination for specifying
+    nvcc behavior with respect to code generation. Where use of the previous
+    options generates code for different 'real' architectures with the PTX for
+    the same 'virtual' architecture, option __-gencode__ allows multiple
+    PTX generations for different 'virtual' architectures. In fact,
+
+        nvcc -arch=ARCH -code=CODE,...
+
+    is equivalent to
+
+        nvcc -gencode arch=ARCH,code=CODE,...
+
+    __-gencode__ options may be repeated for different virtual
+    architectures. Allowed keywords for this option: 'arch','code'.
+
+-rdc, --relocatable-device-code (true|false)
+
+:   Enable (disable) the generation of relocatable device code.
+
+    If disabled, executable device code is generated.  Relocatable device code
+    must be linked before it can be executed. Default value: 0.  
+
+-e, --entries _ENTRY_...
+
+:   Specify the global entry functions for which code must be generated.  By
+    default, code will be generated for all entry functions.
+
+-maxrregcount, --maxrregcount _NUM_
+
+:   Specify the maximum number of registers that GPU functions can use.
+
+    Until a function-specific limit, a higher value will generally increase
+    the performance of individual GPU threads that execute this function.
+    However, because thread registers are allocated from a global register
+    pool on each GPU, a higher value of this option will also reduce the
+    maximum thread block size, thereby reducing the amount of thread
+    parallelism. Hence, a good maxrregcount value is the result of a
+    trade-off. If this option is not specified, then no maximum is assumed.
+    Value less than the minimum registers required by ABI will be bumped up
+    by the compiler to ABI minimum limit.
+
+-use_fast_math, --use_fast_math
+
+:   Make use of the fast math library. This implies:
+    __--ftz=true\ --prec-div=false\ --prec-sqrt=false\ --fmad=true__.
+
+-ftz, --ftz (true|false)
+
+:   This option controls single-precision denormals support. __--ftz=true__
+    flushes denormal values to zero and __--ftz=false__ preserves denormal
+    values.  __--use_fast_math__ implies __--ftz=true__. Default value: false.
+
+-prec-div, --prec-div (true|false)
+
+:   This option controls single-precision floating-point division and
+    reciprocals. __--prec-div=true__ enables the IEEE round-to-nearest mode and
+    __--prec-div=false__ enables the fast approximation mode.
+    __--use_fast_math__ implies __--prec-div=false__. Default value: true.
+
+-prec-sqrt, --prec-sqrt (true|false)
+
+:   This option controls single-precision floating-point squre root.
+    __--prec-sqrt=true__ enables the IEEE round-to-nearest mode and
+    __--prec-sqrt=false__ enables the fast approximation mode.
+    __--use_fast_math__ implies __--prec-sqrt=false__. Default value: true.
+
+-fmad, --fmad (true|false)
+
+:   This option enables (disables) the contraction of floating-point multiplies
+    and adds/subtracts into floating-point multiply-add operations (FMAD, FFMA,
+    or DFMA). __--use_fast_math__ implies __--fmad=true__. Default value: true.
+
+Options for steering cuda compilation
+-------------------------------------
+
+-default-stream, --default-stream (legacy|null|per-thread)
+
+:   Specify the stream that CUDA commands from the compiled program will be
+    sent to by default.  
+
+    legacy
+    :   The CUDA legacy stream (per context, implicitly synchronizes with other
+        streams).
+
+
+    per-thread
+    :   A normal CUDA stream (per thread, does not implicitly synchronize with
+        other streams).
+
+    null
+    :   is a deprecated alias for 'legacy'.
+
+    Default value: legacy.
+
+Generic tool options 
+--------------------
+
+-w, --disable-warnings
+
+:   Inhibit all warning messages.
+
+-src-in-ptx, --source-in-ptx
+
+:   Interleave source in PTX.
+
+-restrict, --restrict
+
+:   Programmer assertion that all kernel pointer parameters are restrict
+    pointers.
+
+-Wno-deprecated-gpu-targets, --Wno-deprecated-gpu-targets
+
+:   Suppress warnings about deprecated GPU target architectures.
+
+-Werror, --Werror _kind_..
+
+:   Make warnings of the specified kinds into errors. The following is the list
+    of warning kinds accepted by this option:
+
+    cross-execution-space-call
+
+    :   Be more strict about unsupported cross execution space calls. The
+        compiler will generate an error instead of a warning for a call from a
+        `__host__ __device__` to a `__host__` function.
+
+-res-usage, --resource-usage
+
+:   Show resource usage such as registers and memeory of the GPU code. This
+    option implies __--nvlink-options --verbose__ when
+    __--relocatable-device-code=true__ is set. Otherwise, it implies
+    __--ptxas-options --verbose__.
+
+-h, --help
+
+:   Print this help information on this tool.
+
+-V, --version
+
+:   Print version information on this tool.
+
+-optf, --options-file _FILE_...
+
+:   Include command line options from specified FILE.
+
+AUTHORS
+======
+
+This man page was authored by Jeremi Piotrowski <jeremi.piotrowski@gmail.com>.  
+The **nvcc** tool was built by NVIDIA ®.
+
+COPYRIGHT
+=========
+
+Copyright © 2005-2015 NVIDIA Corporation.
+
+VERSION
+=======
+
+Tue_Aug_11_14:27:32_CDT_2015 Cuda compilation tools, release 7.5,
+V7.5.17
+
