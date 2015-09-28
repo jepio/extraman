@@ -61,61 +61,70 @@ OPTIONS
 -e, --events _event_
 
 :   Specify the events to be profiled on certain device(s). Multiple event
-    names separated by comma can be specified. Which device(s) are profiled
-    is controlled by the "--devices" option. Otherwise events will be
-    collected on all devices. For a list of available events, use
-    "--query-events". Use "--events all" to profile all events available for
-    each device. Use "--devices" and "--kernels" to select a specific kernel
-    invocation.
+    names separated by comma can be specified. Which device(s) are profiled is
+    controlled by the __--devices__ option. Otherwise events will be collected
+    on all devices. For a list of available events, use __--query-events__. Use
+    __--events all__ to profile all events available for each device. Use
+    __--devices__ and __--kernels__ to select a specific kernel invocation.
 
---kernels (kernel path syntax)
+--kernels <_kernel path syntax_>
 
-:   This option changes the scope of subsequent "--events", "--metrics"
-options. The syntax is as following:
+:   This option changes the scope of subsequent __--events__, __--metrics__
+    options. The syntax is as following:
 
-(kernel name)
+        <kernel name>
 
-or
+    or
 
-(context id/name):&lt;stream id/name&gt;:&lt;kernel
-name):(invocation&gt;
+        <context id/name>:<stream id/name>:<kernel name>:<invocation>
 
-The context/stream IDs, names, kernel name and invocation can be regular
-expressions. Empty string matches any number or characters. If
-(context id/name) or &lt;stream id/name&gt; is a positive number,
-it’s strictly matched against the CUDA context/stream ID. Otherwise it’s
-treated as a regular expression and matched against the context/stream
-name specified by the NVTX library. If the invocation count is a
-positive number, it’s strictly matched against the invocation of the
-kernel. Otherwise it’s treated as a regular expression. Example:
-**--kernels** "1:foo:bar:2" - profile any kernel whose name contains
-"bar" and was the 2nd instance on context 1 and on stream named "foo".
+    The context/stream IDs, names, kernel name and invocation can be regular
+    expressions. Empty string matches any number or characters. If
+    <context id/name> or <stream id/name> is a positive number,
+    it’s strictly matched against the CUDA context/stream ID. Otherwise it’s
+    treated as a regular expression and matched against the context/stream
+    name specified by the NVTX library. If the invocation count is a
+    positive number, it’s strictly matched against the invocation of the
+    kernel. Otherwise it’s treated as a regular expression.
 
--m, --metrics (metric names)
+    Example:  
+    --kernels `"1:foo:bar:2"`
+    :   profile any kernel whose name contains "bar" and was the 2nd instance
+        on context 1 and on stream named "foo".
+
+-m, --metrics <_metric name_>...
 
 :   Specify the metrics to be profiled on certain device(s). Multiple metric
-names separated by comma can be specified. Which device(s) are profiled
-is controlled by the "--devices" option. Otherwise metrics will be
-collected on all devices. For a list of available metrics, use
-"--query-metrics". Use "--metrics all" to profile all metrics available
-for each device. Use "--devices" and "--kernels" to select a specific
-kernel invocation.
+    names separated by comma can be specified. Which device(s) are profiled is
+    controlled by the __--devices__ option. Otherwise metrics will be collected
+    on all devices. For a list of available metrics, use __--query-metrics__.
+    Use __--metrics all__ to profile all metrics available for each device. Use
+    __--devices__ and __--kernels__ to select a specific kernel invocation.
 
 --profile-all-processes
 
 :   Profile all processes launched by the same user who launched this nvprof
-instance. Note: Only one instance of nvprof can run with this option at
-the same time. Under this mode, there’s no need to specify an
-application to run.
+    instance.
+
+    _Note_: Only one instance of nvprof can run with this option at the
+    same time. Under this mode, there’s no need to specify an application to
+    run.
 
 --profile-api-trace (none|runtime|driver|all)
 
 :   Turn on/off CUDA runtime/driver API tracing. Allowed values:
 
-none - turn off API tracing
+    none
+    :   turn off API tracing
 
-runtime - only turn on CUDA runtime API tracing driver - only turn on
-CUDA driver API tracing all - turn on all API tracing (default)
+    runtime
+    :   only turn on CUDA runtime API tracing
+
+    driver
+    :   only turn on CUDA driver API tracing
+
+    all
+    :   turn on all API tracing (default)
 
 --profile-child-processes
 
@@ -124,181 +133,194 @@ CUDA driver API tracing all - turn on all API tracing (default)
 --profile-from-start (on|off)
 
 :   Enable/disable profiling from the start of the application. If it’s
-disabled, the application can use {cu,cuda}Profiler{Start,Stop} to turn
-on/off profiling. Allowed values:
+    disabled, the application can use
 
-on - enable profiling from start (default)
+        {cu,cuda}Profiler{Start,Stop}
 
-off - disable profiling from start
+    to turn on/off profiling. Allowed values:
+
+    on
+    :   enable profiling from start (default)
+
+    off
+    :   disable profiling from start
 
 --query-events
 
 :   List all the events available on the device(s). Device(s) queried can be
-controlled by the "--devices" option.
+    controlled by the __--devices__ option.
 
 --query-metrics
 
 :   List all the metrics available on the device(s). Device(s) queried can
-be controlled by the "--devices" option.
+    be controlled by the __--devices__ option.
 
---replay-mode (mode)
+--replay-mode _MODE_
 
-:   Choose replay mode used when not all events/metrics can be collected in
-a single run. Allowed values:
+:   Choose replay _MODE_ used when not all events/metrics can be collected in
+    a single run. Allowed values:
 
-disabled - replay is disabled, events/metrics couldn’t
+    disabled
+    :   replay is disabled, events/metrics couldn’t be profiled will be dropped
 
-be profiled will be dropped
+    kernel
+    :   each kernel invocation is replayed (default)
 
-kernel - each kernel invocation is replayed (default)
+    application
+    :   the entire application is replayed.
 
-application - the entire application is replayed.
-
-This is incompatible with "--profile-all-processes" or
-"profile-child-processes"
+    This is incompatible with __--profile-all-processes__ or
+    __profile-child-processes__
 
 --system-profiling (on|off)
 
 :   Turn on/off power, clock, and thermal profiling. Allowed values:
 
-on - turn on system profiling
+    on
+    :   turn on system profiling
 
-off - turn off system profiling (default)
+    off
+    :   turn off system profiling (default)
 
--t, --timeout (seconds)
+-t, --timeout _seconds_
 
-:   Set an execution timeout (in seconds) for the CUDA application. Note:
-Timeout starts counting from the moment the CUDA driver is initialized.
-If the application doesn’t call any CUDA APIs, timeout won’t be
-triggered.
+:   Set an execution timeout (in seconds) for the CUDA application.
+
+    _Note_: Timeout starts counting from the moment the CUDA driver is
+    initialized.  If the application doesn’t call any CUDA APIs, timeout won’t
+    be triggered.
 
 --unified-memory-profiling (per-process-device|off)
 
 :   Options for unified memory profiling. Allowed values:
 
-per-process-device - collect counts for each process
+    per-process-device
+    :   collect counts for each process and each device
 
-and each device
-
-off - turn off unified memory profiling (default)
+    off
+    :   turn off unified memory profiling (default)
 
 --cpu-profiling (on|off)
 
-:   Turn on CPU profiling. Note: CPU profiling is not supported in
-multi-process mode.
+:   Turn on/off CPU profiling.
 
---cpu-profiling-frequency (frequency)
+    _Note_: CPU profiling is not supported in multi-process mode.
 
-:   Set the CPU profiling frequency in samples per second. Default is 100Hz.
-Maximum is 500Hz.
+--cpu-profiling-frequency _frequency_
 
---cpu-profiling-max-depth (depth)
+:   Set the CPU profiling _frequency_ in samples per second. Default is 100Hz.
+    Maximum is 500Hz.
+
+--cpu-profiling-max-depth _depth_
 
 :   Set the maximum depth of each call stack. Zero means no limit. Default
-is zero.
+    is zero.
 
---cpu-profiling-mode (mode)
+--cpu-profiling-mode _mode_
 
-:   Set the output mode of CPU profiling. Allowed values:
+:   Set the output _mode_ of CPU profiling. Allowed values:
 
-"flat" - Show flat profile
+    flat
+    :   Show flat profile
 
-"top-down" - Show parent functions at the top "bottom-up" - Show parent
-functions at the bottom
+    top-down
+    :   Show parent functions at the top
 
-(default)
+    bottom-up
+    :   Show parent functions at the bottom (default)
 
---cpu-profiling-percentage-threshold (threshold)
+--cpu-profiling-percentage-threshold _threshold_
 
-:   Filter out the entries that are below the set percentage threshold. The
-limit should be an integer between 0 and 100, inclusive. Zero means no
-limit. Default is zero.
+:   Filter out the entries that are below the set percentage _threshold_. The
+    limit should be an integer between 0 and 100, inclusive. Zero means no
+    limit. Default is zero.
 
---cpu-profiling-scope (scope)
+--cpu-profiling-scope _scope_
 
-:   Choose the profiling scope. Allowed values:
+:   Choose the profiling _scope_. Allowed values:
 
-"function" - Each level in the stack trace represents
+    function
+    :   Each level in the stack trace represents a distinct function (default)
 
-a distinct function (default)
-
-"instruction" - Each level in the stack trace represents
-
-a distinct instruction address
+    instruction
+    :   Each level in the stack trace represents a distinct instruction address
 
 --cpu-profiling-show-ccff (on|off)
 
 :   Whether to print Common Compiler Feedback Format (CCFF) messages
-embedded in the binary. Note: this option implies "--cpu-profiling-scope
-instruction".
+    embedded in the binary.
+
+    _Note_: this option implies __--cpu-profiling-scope instruction__.
 
 --cpu-profiling-show-library (on|off)
 
 :   Whether to print the library name for each sample.
 
---cpu-profiling-thread-mode (mode)
+--cpu-profiling-thread-mode _mode_
 
-:   Set the thread mode of CPU profiling. Allowed values:
+:   Set the thread _mode_ of CPU profiling. Allowed values:
 
-"separated" - Show separate profile for each thread
+    separated
+    :   Show separate profile for each thread
 
-"aggregated" - Aggregate data from all threads
+    aggregated
+    :   Aggregate data from all threads
 
---context-name (name)
+--context-name _name_
 
 :   Name of the CUDA context.
 
-"%i" in the context name string is replaced with
+    "%i"
+    :   in the context name string is replaced with the ID of the context.
 
-the ID of the context.
+    "%p"
+    :   in the context name string is replaced with the process ID of the application being profiled.
 
-"%p" in the context name string is replaced with
+    "%q{(ENV)}"
+    :   in the context name string is replaced with the value of the environment variable "(ENV)". If the environment variable is not set it’s an error.
 
-the process ID of the application being profiled.
+    "%h"
+    :   in the context name string is replaced with the hostname of the system.
 
-"%q{(ENV)}" in the context name string is replaced
+    "%%"
+    :   in the context name string is replaced with "%". Any other character following "%" is illegal.
 
-with the value of the environment variable "(ENV)". If the
-environment variable is not set it’s an error.
+--csv
 
-"%h" in the context name string is replaced with
-
-the hostname of the system.
-
-"%%" in the context name string is replaced with
-
-"%". Any other character following "%" is illegal.
-
-+----------------+----------------+----------------+----------------+----------------+
-|                | **--csv**      |                | Use            |                |
-|                |                |                | comma-separate |                |
-|                |                |                | d              |                |
-|                |                |                | values in the  |                |
-|                |                |                | output.        |                |
-+----------------+----------------+----------------+----------------+----------------+
+:   Use comma-separated values in the output.
 
 --demangling (on|off)
 
 :   Turn on/off C++ name demangling of function names. Allowed values:
 
-on - turn on demangling (default)
+    on
+    :   turn on demangling (default)
 
-off - turn off demangling
+    off
+    :   turn off demangling
 
 -u, --normalized-time-unit (s|ms|us|ns|col|auto)
 
 :   Specify the unit of time that will be used in the output. Allowed
 values:
 
-s - second, ms - millisecond, us - microsecond,
+    s
+    :   second
 
-ns - nanosecond
+    ms
+    :   millisecond
 
-col - a fixed unit for each column
+    us
+    :   microsecond
 
-auto (default) - the scale is chosen for each value
+    ns
+    :   nanosecond
 
-based on its length.
+    col
+    :   a fixed unit for each column
+
+    auto
+    :   the scale is chosen for each value based on its length. (default)
 
 --print-api-summary
 
@@ -311,18 +333,18 @@ based on its length.
 --print-gpu-summary
 
 :   Print a summary of the activities on the GPU (including CUDA kernels and
-memcpy’s/memset’s).
+    memcpy’s/memset’s).
 
 --print-gpu-trace
 
 :   Print individual kernel invocations (including CUDA memcpy’s/memset’s)
-and sort them in chronological order. In event/metric profiling mode,
-show events/metrics for each kernel invocation.
+    and sort them in chronological order. In event/metric profiling mode,
+    show events/metrics for each kernel invocation.
 
 -s, --print-summary
 
 :   Print a summary of the profiling result on screen. Note: This is the
-default unless "--export-profile" or other print options are used.
+    default unless __--export-profile__ or other print options are used.
 
 --print-summary-per-gpu
 
@@ -332,24 +354,24 @@ default unless "--export-profile" or other print options are used.
 
 :   Name of the process.
 
-"%p" in the process name string is replaced with
+    "%p" in the process name string is replaced with
 
-the process ID of the application being profiled.
+    the process ID of the application being profiled.
 
-"%q{(ENV)}" in the process name string is replaced
+    "%q{(ENV)}" in the process name string is replaced
 
-with the value of the environment variable "(ENV)". If the
-environment variable is not set it’s an error.
+    with the value of the environment variable "(ENV)". If the
+    environment variable is not set it’s an error.
 
-"%h" in the process name string is replaced with
+    "%h" in the process name string is replaced with
 
-the hostname of the system.
+    the hostname of the system.
 
-"%%" in the process
+    "%%" in the process
 
-name string is replaced with
+    name string is replaced with
 
-"%". Any other character following "%" is illegal.
+    "%". Any other character following "%" is illegal.
 
 --quiet
 
@@ -359,59 +381,59 @@ name string is replaced with
 
 :   Name of the CUDA stream.
 
-"%i" in the stream name string is replaced with the
+    "%i" in the stream name string is replaced with the
 
-ID of the stream.
+    ID of the stream.
 
-"%p" in the stream name string is replaced with
+    "%p" in the stream name string is replaced with
 
-the process ID of the application being profiled.
+    the process ID of the application being profiled.
 
-"%q{(ENV)}" in the stream name string is replaced
+    "%q{(ENV)}" in the stream name string is replaced
 
-with the value of the environment variable "(ENV)". If the
-environment variable is not set it’s an error.
+    with the value of the environment variable "(ENV)". If the
+    environment variable is not set it’s an error.
 
-"%h" in the stream name string is replaced with
+    "%h" in the stream name string is replaced with
 
-the hostname of the system.
+    the hostname of the system.
 
-"%%" in the stream name string is replaced with
+    "%%" in the stream name string is replaced with
 
-"%". Any other character following "%" is illegal.
+    "%". Any other character following "%" is illegal.
 
 -o, --export-profile (filename)
 
 :   Export the result file which can be imported later or opened by the
 NVIDIA Visual Profiler.
 
-"%p" in the file name string is replaced with the
+    "%p" in the file name string is replaced with the
 
-process ID of the application being profiled.
+    process ID of the application being profiled.
 
-"%q{(ENV)}" in the file name string is replaced
+    "%q{(ENV)}" in the file name string is replaced
 
-with the value of the environment variable "(ENV)". If the
-environment variable is not set it’s an error.
+    with the value of the environment variable "(ENV)". If the
+    environment variable is not set it’s an error.
 
-"%h" in the file name string is replaced with the
+    "%h" in the file name string is replaced with the
 
-hostname of the system.
+    hostname of the system.
 
-"%%" in the file name string is replaced with "%".
+    "%%" in the file name string is replaced with "%".
 
-Any other character following "%" is illegal.
+    Any other character following "%" is illegal.
 
-By default, this option disables the summary output. Note:
+    By default, this option disables the summary output.
 
-If the application being profiled creates child processes, or if
-’--profile-all-processes’ is used, the "%p" format is needed to get
-correct export files for each process.
+    _Note_: If the application being profiled creates child processes, or if
+    __--profile-all-processes__ is used, the "%p" format is needed to get
+    correct export files for each process.
 
 -f, --force-overwrite
 
 :   Force overwriting all output files (any existing files will be
-overwritten).
+    overwritten).
 
 -i, --import-profile (filename)
 
@@ -420,33 +442,26 @@ overwritten).
 --log-file (filename)
 
 :   Make nvprof send all its output to the specified file, or one of the
-standard channels. The file will be overwritten. If the file doesn’t
-exist, a new one will be created.
+    standard channels. The file will be overwritten. If the file doesn’t
+    exist, a new one will be created.
 
-"%1" as the whole file name indicates standard output
+    "%1" as the whole file name indicates standard output channel (stdout).
 
-channel (stdout).
+    "%2" as the whole file name indicates standard error channel (stderr).
+    _Note_: This is the default.
 
-"%2" as the whole file name indicates standard error
+    "%p" in the file name string is replaced with the process ID of the
+    application being profiled.
 
-channel (stderr). Note: This is the default.
+    "%q{(ENV)}" in the file name string is replaced with the value of the
+    environment variable "(ENV)". If the environment variable is not set it’s
+    an error.
 
-"%p" in the file name string is replaced with the
+    "%h" in the file name string is replaced with the hostname of the system.
 
-process ID of the application being profiled.
+    "%%" in the file name is replaced with "%".
 
-"%q{(ENV)}" in the file name string is replaced
-
-with the value of the environment variable "(ENV)". If the
-environment variable is not set it’s an error.
-
-"%h" in the file name string is replaced with the
-
-hostname of the system.
-
-"%%" in the file name is replaced with "%".
-
-Any other character following "%" is illegal.
+    Any other character following "%" is illegal.
 
 -h, --help
 
