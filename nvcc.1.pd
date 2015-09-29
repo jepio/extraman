@@ -552,7 +552,8 @@ Generic tool options
 
 -src-in-ptx, --source-in-ptx
 
-:   Interleave source in PTX.
+:   Interleave source in PTX. This option only works when either __-G__ or
+    __-lineinfo__ is specified as well.
 
 -restrict, --restrict
 
